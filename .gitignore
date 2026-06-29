@@ -5,3 +5,4 @@ __pycache__/
 *.db
 all_articles.txt
 .DS_Store
+output/
