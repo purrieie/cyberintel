@@ -1,21 +1,6 @@
 # parser/cleaner.py
 import re
-try:
-    import ftfy
-    _fix_text = ftfy.fix_text
-except Exception:
-    # Fallback if ftfy is not installed: a lightweight fixer using html.unescape
-    import html
-
-    def _fix_text(s: str) -> str:
-        if not s:
-            return s
-        # unescape HTML entities and normalize common unicode quirks
-        s = html.unescape(s)
-        s = s.replace("\u00a0", " ")  # no-break space -> space
-        s = s.replace("\u2018", "'").replace("\u2019", "'")
-        s = s.replace("\u201c", '"').replace("\u201d", '"')
-        return s
+import ftfy
 
 
 class TextCleaner:
@@ -50,7 +35,7 @@ class TextCleaner:
             return ""
 
         # 1. Fix encoding artifacts (mojibake, wrong quotes, etc.)
-        text = _fix_text(text)
+        text = ftfy.fix_text(text)
 
         # 2. Remove null bytes and control characters
         text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)

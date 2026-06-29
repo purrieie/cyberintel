@@ -6,7 +6,6 @@ from db.models import ENGINE, Article, Report
 
 
 class ArticleRepository:
-
     def _session(self) -> Session:
         return Session(ENGINE)
 
@@ -28,6 +27,7 @@ class ArticleRepository:
                 author=data.get("author", ""),
                 date=data.get("date", ""),
                 source=data["source"],
+                severity=data.get("severity", "low"),   # <-- save severity
                 categories=json.dumps(data.get("categories", [])),
                 tags=json.dumps(data.get("tags", [])),
                 raw_text=data.get("raw_text", ""),
@@ -35,6 +35,7 @@ class ArticleRepository:
             )
             s.add(article)
             s.commit()
+            return article.id
 
     def get_pending_articles(self, limit: int = 50):
         with self._session() as s:
@@ -56,24 +57,6 @@ class ArticleRepository:
                 article.clean_text = clean_text
                 article.parse_status = parse_status
                 article.parsed_at = datetime.utcnow()
-                s.commit()
-
-    def get_parsed_unsent(self, limit: int = 5):
-        with self._session() as s:
-            rows = (
-                s.query(Article)
-                .filter_by(parse_status="parsed")
-                .filter(Article.groq_summary.is_(None))
-                .limit(limit)
-                .all()
-            )
-            return [self._to_dict(r) for r in rows]
-
-    def update_grok_summary(self, article_id: int, summary: str):
-        with self._session() as s:
-            article = s.query(Article).filter_by(id=article_id).first()
-            if article:
-                article.groq_summary = summary
                 s.commit()
 
     def get_all_articles(self, limit: int = 100, offset: int = 0):
@@ -105,6 +88,7 @@ class ArticleRepository:
             "author": r.author,
             "date": r.date,
             "source": r.source,
+            "severity": r.severity or "low",   # <-- return severity for backfill
             "categories": json.loads(r.categories or "[]"),
             "tags": json.loads(r.tags or "[]"),
             "raw_text": r.raw_text,

@@ -11,6 +11,8 @@ from scrapy.http import Response
 from config.seeds import SiteConfig
 from db.repository import ArticleRepository
 
+logging.getLogger("trafilatura").setLevel(logging.ERROR)
+
 logger = logging.getLogger(__name__)
 
 CYBER_KEYWORDS = [

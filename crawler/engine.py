@@ -1,6 +1,7 @@
 # crawler/engine.py
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
+from twisted.internet import reactor
 from crawler.spiders.bleepingcomputer import BleepingComputerSpider
 from crawler.spiders.hackernews import HackerNewsSpider
 from crawler.spiders.securityweek import SecurityWeekSpider
@@ -23,18 +24,20 @@ SCRAPY_SETTINGS = {
     "DEPTH_LIMIT": 3,
     "ITEM_PIPELINES": {
         "crawler.pipelines.filter.CyberRelevanceFilterPipeline": 100,
-        "crawler.pipelines.storage.DatabaseStoragePipeline": 200,
+        "crawler.pipelines.relevance.BatchRelevanceStoragePipeline": 300,
     },
     "LOG_LEVEL": "INFO",
     "HTTPCACHE_ENABLED": False,
 }
 
 
-def run_crawl():
-    process = CrawlerProcess(settings=SCRAPY_SETTINGS)
+def run_crawl(on_start=None):
+    process = CrawlerProcess(settings=SCRAPY_SETTINGS, install_root_handler=False)
     for spider in SPIDERS:
         process.crawl(spider)
-    process.start()
+    if on_start:
+        on_start(process)
+    process.start(install_signal_handlers=False)
 
 
 if __name__ == "__main__":

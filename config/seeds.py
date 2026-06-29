@@ -26,7 +26,7 @@ SEED_SITES = [
         allowed_domains=["thehackernews.com"],
         article_path_patterns=[r"/\d{4}/\d{2}/.+\.html$"],
         category_path_patterns=[r"/search/label/.+", r"/p/archive\.html"],
-        deny_patterns=[r"/cdn-cgi/", r"#", r"javascript:"],
+        deny_patterns=[r"/cdn-cgi/", r"#", r"javascript:", r"/search\?", r"\?m=1"],
         rate_limit_delay=1.5,
     ),
     SiteConfig(
@@ -40,7 +40,7 @@ SEED_SITES = [
         allowed_domains=["bleepingcomputer.com"],
         article_path_patterns=[r"/news/.+/.+/$"],
         category_path_patterns=[r"/news/[a-z-]+/$", r"/tag/[a-z-]+/"],
-        deny_patterns=[r"/forums/", r"/download/", r"/contact", r"/about"],
+        deny_patterns=[r"/forums/", r"/download/", r"/contact", r"/about", r"/cdn-cgi/", r"#"],
         rate_limit_delay=2.0,
     ),
     SiteConfig(
@@ -54,7 +54,7 @@ SEED_SITES = [
         allowed_domains=["securityweek.com"],
         article_path_patterns=[r"/[a-z0-9-]+-\d+/$", r"/[a-z0-9-]+/$"],
         category_path_patterns=[r"/category/[a-z-]+/", r"/category/[a-z-]+/page/\d+/"],
-        deny_patterns=[r"/advertise", r"/privacy", r"/careers", r"/contact"],
+        deny_patterns=[r"/advertise", r"/privacy", r"/careers", r"/contact", r"/cdn-cgi/", r"/email-protection", r"#"],
         rate_limit_delay=1.5,
     ),
     SiteConfig(
@@ -68,7 +68,7 @@ SEED_SITES = [
         allowed_domains=["darkreading.com"],
         article_path_patterns=[r"/[a-z-]+/[a-z0-9-]+$"],
         category_path_patterns=[r"/[a-z-]+$", r"/[a-z-]+/\d+$"],
-        deny_patterns=[r"/about", r"/contact", r"/privacy", r"/events"],
+        deny_patterns=[r"/about", r"/contact", r"/privacy", r"/events", r"/author/", r"/cdn-cgi/", r"#"],
         rate_limit_delay=1.5,
     ),
     SiteConfig(
@@ -82,7 +82,7 @@ SEED_SITES = [
         allowed_domains=["krebsonsecurity.com"],
         article_path_patterns=[r"/\d{4}/\d{2}/[a-z0-9-]+/$"],
         category_path_patterns=[r"/category/[a-z0-9-]+/", r"/category/[a-z0-9-]+/page/\d+/"],
-        deny_patterns=[r"/about", r"/contact", r"/privacy"],
+        deny_patterns=[r"/about", r"/contact", r"/privacy", r"/cdn-cgi/", r"\.com/.*\.com", r"#"],
         rate_limit_delay=2.0,
     ),
 ]

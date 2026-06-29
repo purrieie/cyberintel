@@ -16,7 +16,6 @@ ENGINE = create_engine(f"sqlite:///{DB_PATH}", echo=False)
 
 class Article(Base):
     __tablename__ = "articles"
-
     id             = Column(Integer, primary_key=True, autoincrement=True)
     url            = Column(Text, unique=True, nullable=False)
     url_hash       = Column(Text, unique=True, nullable=False)
@@ -25,6 +24,7 @@ class Article(Base):
     author         = Column(Text)
     date           = Column(Text)
     source         = Column(Text, nullable=False)
+    severity       = Column(Text, default="low")   # <-- persisted triage severity
     categories     = Column(Text)        # JSON string
     tags           = Column(Text)        # JSON string
     raw_text       = Column(Text)
@@ -38,7 +38,6 @@ class Article(Base):
 
 class Report(Base):
     __tablename__ = "reports"
-
     id         = Column(Integer, primary_key=True, autoincrement=True)
     title      = Column(Text)
     template   = Column(Text)
